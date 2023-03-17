@@ -4,6 +4,7 @@ import { useRoute, useNavigation,useIsFocused ,useNavigationState } from '@react
 import * as FileSystem from 'expo-file-system';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import { Alert } from 'react-native';
 
 export default function NewList(props) {
     const [date, setDate] = useState(new Date());
@@ -104,6 +105,7 @@ export default function NewList(props) {
       });
     }
     const handleSubmit = () => {
+      //deleteFile('data')
       const dateValue = inputRefDate.current._internalFiberInstanceHandleDEV.memoizedProps.value
       const timeValue = inputRefTime.current._internalFiberInstanceHandleDEV.memoizedProps.value
       if(section != "" && detail != "" && location != "" && status != ""){
@@ -112,27 +114,24 @@ export default function NewList(props) {
         // readJsonFile(filenameText)
         checkExistsFile(filenameText,dataList)
       }else{
-        console.log(333);
+        Alert.alert(
+          'Message',
+          'Please enter all information.',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+        );
       }
-      // checkExistsFile(filenameText,dataList)
-      // add new data to object
-      // //writeToFile(filename,List)
-      // //console.log(newList);
-      // const readData = readJsonFile(filename,dataList)
-      // readData.then((data)=>{
-      //   if(data.data != ''){
-      //     const newList = JSON.stringify(data)+"\n"+JSON.stringify(List)
-      //     writeToFile(filename,newList)
-      //   }
-      // })
     }
     return(
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.continer}>
           <View>
+            <Text>Section</Text>
             <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setSection)}} placeholder='section'/>
           </View>
           <View>
+            <Text>Detail</Text>
             <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setDetail)}} placeholder='detail'/>
           </View>
           <TouchableOpacity activeOpacity = {1} onPress={showDatepicker} >
@@ -173,10 +172,12 @@ export default function NewList(props) {
           />
         )}
           <View>
-            <TextInput onChangeText={(value)=>{handleChange(value,setLocation)}} placeholder='location'/>
+            <Text>Location</Text>
+            <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setLocation)}} placeholder='location'/>
           </View>
           <View>
-            <TextInput onChangeText={(value)=>{handleChange(value,setStatus)}} placeholder='status'/>
+            <Text>Status</Text>
+            <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setStatus)}} placeholder='status'/>
           </View>
           <Button title='Submit' onPress={handleSubmit}/>
         </View>
@@ -187,7 +188,7 @@ export default function NewList(props) {
 
 const styles = StyleSheet.create({
   continer:{
-    paddingTop: 100
+    paddingTop: 25
   },
   input: {
     height: 40,
