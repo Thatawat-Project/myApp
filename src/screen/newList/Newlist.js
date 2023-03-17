@@ -1,27 +1,42 @@
 import React, { useState, useEffectม, useRef } from 'react';
-import { KeyboardAvoidingView, TextInput, StyleSheet, View, Text, Button } from 'react-native';
+import { KeyboardAvoidingView, TextInput, StyleSheet, View, Text, Button ,TouchableOpacity} from 'react-native';
 import { useRoute, useNavigation,useIsFocused ,useNavigationState } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
 export default function NewList(props) {
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
     const [section, setSection] = useState('');
     const [detail, setDetail] = useState('');
-    const [time, setTime] = useState('');
     const [location, setLocation] = useState('');
     const [status, setStatus] = useState('');
     const [dataArray, setDataArray] = useState([])
     const [dataList, setDataList] = useState({})
-    const [d, setd] = useState('')
+    const inputRefDate = useRef(null);
+    const inputRefTime = useRef(null);
     let arrayDataList = []
     let jsonData = {}
     const listData = {
       user:'',
       date:'',
       todoList:{
-        section:''
+        section:'',
+        detail:'',
+        time:'',
+        location:'',
+        status:''
       }
     };
     const filenameText = 'data'
+
+    const showMode = (currentMode) => {
+      setShow(true);
+      setMode(currentMode);
+    };
+
     const writeToFile = async (fileName, content) => {
       const fileUri = `${FileSystem.documentDirectory}${fileName}.json`;
       try {
@@ -51,6 +66,20 @@ export default function NewList(props) {
       }
     };
     
+    const onChange = (event, selectedDate) => {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDate(currentDate);
+    };  
+
+    const showDatepicker = () => {
+      showMode('date');
+    };
+  
+    const showTimepicker = () => {
+      showMode('time');
+    };
+
     const handleChange = (value,setValue) =>{
       setValue(value);
     }
@@ -75,8 +104,16 @@ export default function NewList(props) {
       });
     }
     const handleSubmit = () => {
-      console.log(dataList[0].todoList);
-      // const dataList = { ...listData, user:'',todoList:{section:section} };
+      const dateValue = inputRefDate.current._internalFiberInstanceHandleDEV.memoizedProps.value
+      const timeValue = inputRefTime.current._internalFiberInstanceHandleDEV.memoizedProps.value
+      if(section != "" && detail != "" && location != "" && status != ""){
+        const dataList = { ...listData, date:dateValue, user:'',todoList:{section:section,detail:detail,time:timeValue,location:location,status:status} };
+        console.log(dataList);
+        // readJsonFile(filenameText)
+        checkExistsFile(filenameText,dataList)
+      }else{
+        console.log(333);
+      }
       // checkExistsFile(filenameText,dataList)
       // add new data to object
       // //writeToFile(filename,List)
@@ -89,30 +126,6 @@ export default function NewList(props) {
       //   }
       // })
     }
-    const doeee = ()=>{
-      arrayDataList = []
-      const readData = readJsonFile(filenameText)
-          readData.then((data)=>{
-            const jsonData = JSON.stringify(data)
-            const NewJsonData = JSON.parse(jsonData)
-            const newData = String(NewJsonData).split('|')
-            newData.forEach(value => {
-              arrayDataList.push(JSON.parse(value))
-            });
-            const dataJsonArray = JSON.parse(JSON.stringify(arrayDataList))
-            setDataList(dataJsonArray)
-          })
-      //checkExistsFile(filename)
-      //writeToFile(filename)
-      //const dd = readJsonFile(filename)
-      // dd.then((data)=>{
-      //   const newData = data
-      //   console.log(data);
-      //   // const d = String(newData).split("\n")
-      //   // console.log(d);
-      // })
-      //deleteFile(filenameText)
-    }
     return(
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.continer}>
@@ -122,17 +135,50 @@ export default function NewList(props) {
           <View>
             <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setDetail)}} placeholder='detail'/>
           </View>
+          <TouchableOpacity activeOpacity = {1} onPress={showDatepicker} >
+            <View>
+              <Text >Date</Text>
+              <TextInput
+                style={styles.input}
+                placeholder='Date'
+                multiline={true}
+                value={`${date.getDate().toLocaleString()}/${date.getMonth().toLocaleString()}/${date.getFullYear().toLocaleString().replace(/,/g, '')}`}
+                editable={false}
+                //onChangeText={(text)=>handleInputChange('date',text)}
+                ref={inputRefDate}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity = {1} onPress={showTimepicker} >
+            <View>
+              <Text>Time</Text>
+              <TextInput
+                style={styles.input}
+                placeholder='Time'
+                multiline={true}
+                value={`${date.getHours()}.${date.getMinutes()} ${moment(date).format('a')}`.toUpperCase()}
+                editable={false}
+                //onChangeText={(text)=>handleInputChange('time',text)}
+                ref={inputRefTime}
+              />
+            </View>
+          </TouchableOpacity>
+          {show && (
+          <DateTimePicker
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        )}
           <View>
-            <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setTime)}} placeholder='time'/>
+            <TextInput onChangeText={(value)=>{handleChange(value,setLocation)}} placeholder='location'/>
           </View>
           <View>
-            <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setLocation)}} placeholder='location'/>
-          </View>
-          <View>
-            <TextInput style={styles.input} onChangeText={(value)=>{handleChange(value,setStatus)}} placeholder='status'/>
+            <TextInput onChangeText={(value)=>{handleChange(value,setStatus)}} placeholder='status'/>
           </View>
           <Button title='Submit' onPress={handleSubmit}/>
-          <Button title='do' onPress={doeee}/>
         </View>
         
       </KeyboardAvoidingView>

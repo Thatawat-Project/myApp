@@ -13,7 +13,7 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Login" component={BottomTabNavigator}/>
+      <Stack.Screen name="Home" component={BottomTabNavigator}/>
       <Stack.Screen name="NewList" component={BottomTabNavigator}/>
     </Stack.Navigator>
   </NavigationContainer>
