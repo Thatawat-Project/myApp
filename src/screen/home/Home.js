@@ -61,7 +61,7 @@ export default function Home() {
       <View style={styles.container}>
         <ImageBackground source={require('../../../assets/images/homeBackground.jpg')} style={styles.backgroundImage}>
         <Text style={styles.textDay}>{dateDay}</Text>
-        <Text>{dateMonth}</Text>
+        <Text style={styles.textTime}>{dateMonth}</Text>
         {showCheck && (
           <View>
             <Text></Text>
@@ -94,5 +94,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingTop:50,
         alignSelf:'center'
+    },
+    textTime:{
+      fontSize:24,
+      alignSelf:'center'
     }
   })
