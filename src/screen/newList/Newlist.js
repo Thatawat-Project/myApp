@@ -110,7 +110,6 @@ export default function NewList(props) {
       const timeValue = inputRefTime.current._internalFiberInstanceHandleDEV.memoizedProps.value
       if(section != "" && detail != "" && location != "" && status != ""){
         const dataList = { ...listData, date:dateValue, user:'',todoList:{section:section,detail:detail,time:timeValue,location:location,status:status} };
-        console.log(dataList);
         // readJsonFile(filenameText)
         checkExistsFile(filenameText,dataList)
       }else{

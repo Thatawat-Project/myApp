@@ -5,10 +5,14 @@ import * as FileSystem from 'expo-file-system';
 
 const win = Dimensions.get('window');
 export default function Home() {
+    const [checkDate, setCheckDate] = useState('')
     const [dateDay, setDateDay] = useState('');
     const [dateMonth, setDateMonth] = useState('');
     const [listArray, setListArray] = useState([])
+    const [dateNow, setDateNow] = useState([])
     const [showCheck, setShowCheck] = useState(false)
+    const [disPlayCheck, setDisPlayCheck] = useState(false)
+    let newDataArrays = []
     let dataArrays = []
 
     const readJsonFile = async (fileName) => {
@@ -24,38 +28,58 @@ export default function Home() {
       }
     };
     useEffect(() => {
+      startDisplay()
         const interval = setInterval(() => {
           const date = new Date();
           setDateDay(date.getDate().toString());
-
           setDateMonth(String(date).split(' ')[1])
+          setCheckDate(String(date).split(' ')[2]+"/"+String(date.getMonth()+1)+"/"+String(date).split(' ')[3])
         }, 1000);
     
         return () => clearInterval(interval);
       }, []);
-
-    const handleSubmit = ()=>{
+    const aa = () =>{
+      console.log(22);
+    }
+    const startDisplay = ()=>{
+      dataArrays = []
       readJsonFile('data').then((data)=>{
         const jsonStringData = JSON.stringify(data)
+        const check = jsonStringData.split('|')
         try
           {
-            const listData = JSON.parse(jsonStringData)
-            const newData = String(listData).split('|')
-            newData.forEach(val => {
-              console.log(JSON.parse(JSON.stringify(val)));
-            });
-            // console.log(String(JSON.parse(listData)));
-            
-            // listData.forEach(value => {
-            //   console.log(JSON.parse(value));
-            // });
-            //setShowCheck(true)
+            if(check.length != 1){
+              const listData = JSON.parse(jsonStringData)
+              const newData = String(listData).split('|')
+              newData.forEach(val => {
+                dataArrays.push(val)
+              });
+       
+              setListArray(dataArrays)
+              setShowCheck(false)
+              setDisPlayCheck(true)
+            }else{
+              const arrayData = JSON.parse(jsonStringData)
+              dataArrays.push(arrayData)
+              setListArray(dataArrays)
+              setDisPlayCheck(false)
+              setShowCheck(true)
+            }
           }
         catch (error){
           console.log(error);
         }
       })
-      setListArray(dataArrays)
+    }
+    const sortData = ()=>{
+      console.log(checkDate);
+      listArray.forEach(val => {
+        if(JSON.parse(val).date == checkDate){
+          // console.log(JSON.parse(val));
+          newDataArrays.push(JSON.parse(val))
+        }
+      });
+      setDateNow(newDataArrays)
     }
     return (
       <View style={styles.container}>
@@ -64,10 +88,17 @@ export default function Home() {
         <Text style={styles.textTime}>{dateMonth}</Text>
         {showCheck && (
           <View>
-            <Text></Text>
+            <Text>{listArray[0].date}</Text>
           </View>
         )}
-        <Button title='Click Me' onPress={handleSubmit}/>
+        {disPlayCheck && (
+          <View>
+            <Text>{JSON.parse(listArray[1]).date}</Text>
+          </View>
+        )
+        }
+        <Button title='click Me Me mE' onPress={sortData}></Button>
+        <Button title='Click Me'/>
         </ImageBackground>
       </View>
     )
