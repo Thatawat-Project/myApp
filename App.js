@@ -3,9 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Login from './src/screen/login/Login';
-import NewList from './src/screen/newList/Newlist';
 import BottomTabNavigator from './src/screen/navbar/navigations/BottomTabNavigator';
+import Loading from './src/screen/loading/Loading';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -13,8 +12,10 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={BottomTabNavigator}/>
-      <Stack.Screen name="NewList" component={BottomTabNavigator}/>
+      <Stack.Screen name="landing" component={Loading}/>
+      <Stack.Screen name="home" component={BottomTabNavigator}/>
+      <Stack.Screen name="newlist" component={BottomTabNavigator}/>
+      <Stack.Screen name="organizer" component={BottomTabNavigator}/>
     </Stack.Navigator>
   </NavigationContainer>
   );
