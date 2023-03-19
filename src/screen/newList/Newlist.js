@@ -1,11 +1,12 @@
 import React, { useState, useEffectม, useRef } from 'react';
-import { KeyboardAvoidingView, TextInput, StyleSheet, View, Text, Button ,TouchableOpacity, ScrollView} from 'react-native';
+import { KeyboardAvoidingView, TextInput, StyleSheet, View, Text,Dimensions, Button ,TouchableOpacity, ScrollView} from 'react-native';
 import { useRoute, useNavigation,useIsFocused ,useNavigationState } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { Alert } from 'react-native';
 
+const { width, height } = Dimensions.get('window');
 export default function NewList({navigation}) {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
@@ -14,8 +15,12 @@ export default function NewList({navigation}) {
     const [detail, setDetail] = useState('');
     const [location, setLocation] = useState('');
     const [status, setStatus] = useState('');
+    const [dataArray, setDataArray] = useState([])
+    const [dataList, setDataList] = useState({})
     const inputRefDate = useRef(null);
     const inputRefTime = useRef(null);
+    let arrayDataList = []
+    let jsonData = {}
     const listData = {
       user:'',
       date:'',
@@ -143,7 +148,6 @@ export default function NewList({navigation}) {
          showsHorizontalScrollIndicator={false}
          showsVerticalScrollIndicator={false}
         >
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View>
               <Text style={{fontSize:24,lineHeight:22,color:'#000000',fontWeight:'bold'}}>New List</Text>
             </View>
@@ -211,7 +215,6 @@ export default function NewList({navigation}) {
               </View>
               {/* <Button title='Click Me !!' onPress={()=>{console.log(myValue);}}></Button> */}
             </View>
-          </KeyboardAvoidingView>
         </ScrollView>
       </View>
     )
@@ -219,7 +222,8 @@ export default function NewList({navigation}) {
 
 const styles = StyleSheet.create({
   continer:{
-    paddingTop: 25
+    paddingTop: 25,
+    
   },
   input:{
     width:300,
