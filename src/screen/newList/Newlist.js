@@ -86,7 +86,7 @@ export default function NewList({navigation}) {
       setValue(value);
     }
     const checkExistsFile = (fileName,newData)=>{
-      deleteFile('data')
+      // deleteFile('data')
       const fileUri = `${FileSystem.documentDirectory}${fileName}.json`;
       FileSystem.getInfoAsync(fileUri).then(info => {
         if (info.exists) {
@@ -106,7 +106,7 @@ export default function NewList({navigation}) {
           })
           console.log('File exists');
         } else {
-          // writeToFile(fileName,newData)
+          writeToFile(fileName,newData)
           console.log('File does not exist');
         }
       }).catch(error => {
@@ -121,6 +121,10 @@ export default function NewList({navigation}) {
         const dataList = { ...listData, date:dateValue, user:'',todoList:{section:section,detail:detail,time:timeValue,location:location,status:status} };
         // readJsonFile(filenameText)
         checkExistsFile(filenameText,dataList)
+        setSection("")
+        setDetail("")
+        setLocation("")
+        setStatus("")
       }else{
         Alert.alert(
           'Message',
@@ -130,10 +134,6 @@ export default function NewList({navigation}) {
           ],
         );
       }
-      setSection("")
-      setDetail("")
-      setLocation("")
-      setStatus("")
     }
     const cancel = ()=>{
       setSection("")
@@ -143,7 +143,7 @@ export default function NewList({navigation}) {
       navigation.navigate('home')
     }
     return(
-      <View style={{paddingTop:45,marginBottom:60, width:'100%',maxWidth: '87.5%',alignSelf:'center'}}>
+      <View style={{paddingTop:60,marginBottom:70, width:'100%',maxWidth: '87.5%',alignSelf:'center'}}>
         <ScrollView 
          showsHorizontalScrollIndicator={false}
          showsVerticalScrollIndicator={false}
@@ -167,7 +167,7 @@ export default function NewList({navigation}) {
                     style={styles.input}
                     placeholder='Date'
                     multiline={true}
-                    value={`${date.getDate().toLocaleString()}/${date.getMonth().toLocaleString()}/${date.getFullYear().toLocaleString().replace(/,/g, '')}`}
+                    value={`${date.getDate().toLocaleString()}/${(date.getMonth()+1).toLocaleString()}/${date.getFullYear().toLocaleString().replace(/,/g, '')}`}
                     editable={false}
                     //onChangeText={(text)=>handleInputChange('date',text)}
                     ref={inputRefDate}

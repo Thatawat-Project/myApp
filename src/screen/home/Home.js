@@ -87,8 +87,9 @@ export default function Home({navigation}) {
             <Text style={styles.textPlan}>What is your plan</Text>
             <View>
               <View style={{paddingTop:15}}>
-                {showCheck && (
-                    <View style={{display:'flex',flexDirection:'column'}}>
+                <>
+                {showCheck ? (listArray.length < 2 ? (
+                  <View style={{display:'flex',flexDirection:'column'}}>
                     <TouchableOpacity activeOpacity={1} style={{marginTop:10,display:'flex',flexDirection:'row',height:125,backgroundColor:'#FEEA7E',borderRadius: 20}}>
                       <View style={styles.boxShowDetail}>
                           <View>
@@ -104,7 +105,9 @@ export default function Home({navigation}) {
                       </View>
                     </TouchableOpacity>
                   </View>
-                )}
+                ) : null) : null}
+                </>
+             
                 <>
                 {disPlayCheck ? (
                      listArray.map((item,index) => {
@@ -122,18 +125,20 @@ export default function Home({navigation}) {
                             if(sortedData[0] === data.todoList.time){
                               return (
                                   <View style={{display:'flex',flexDirection:'column'}}>
-                                    <TouchableOpacity key={index} activeOpacity={1} style={{marginTop:10,display:'flex',flexDirection:'row',height:125,backgroundColor:'#FEEA7E',borderRadius: 20}}>
-                                      <View style={styles.boxShowDetail}>
-                                          <View>
-                                            <Text style={{fontSize:20}} >{data.todoList.time.split(' ')[0]}</Text>
-                                            <Text style={{fontSize:20}} >{data.todoList.time.split(' ')[1]}</Text>
-                                          </View>
-                                      </View>
-                                      <View style={{display:'flex',flexDirection:'column',alignItems:'center',width:254,justifyContent:'space-between',height:90,alignSelf:'center'}}>
-                                        <View style={{display:'flex',width:245,alignSelf:'center',alignItems:'center',justifyContent:'center',alignSelf:'center'}}>
-                                          <Text style={{fontSize:20, fontWeight:'bold'}} >{data.todoList.section}</Text>
+                                    <TouchableOpacity activeOpacity={1} style={{marginTop:10,}}>
+                                      <View key={index} style={{display:'flex',flexDirection:'row',height:125,backgroundColor:'#FEEA7E',borderRadius: 20}}>
+                                        <View style={styles.boxShowDetail}>
+                                            <View>
+                                              <Text style={{fontSize:20}} >{data.todoList.time.split(' ')[0]}</Text>
+                                              <Text style={{fontSize:20}} >{data.todoList.time.split(' ')[1]}</Text>
+                                            </View>
                                         </View>
-                                        <Text style={{fontSize:13, fontWeight: 'bold',}} >{data.todoList.location}</Text>
+                                        <View style={{display:'flex',flexDirection:'column',alignItems:'center',width:254,justifyContent:'space-between',height:90,alignSelf:'center'}}>
+                                          <View style={{display:'flex',width:245,alignSelf:'center',alignItems:'center',justifyContent:'center',alignSelf:'center'}}>
+                                            <Text style={{fontSize:20, fontWeight:'bold'}} >{data.todoList.section}</Text>
+                                          </View>
+                                          <Text style={{fontSize:13, fontWeight: 'bold',}} >{data.todoList.location}</Text>
+                                        </View>
                                       </View>
                                     </TouchableOpacity>
                                   </View>
@@ -157,7 +162,7 @@ export default function Home({navigation}) {
 const styles = StyleSheet.create({
     container: {
       flex:1,
-      paddingTop: 15,
+      paddingTop: 25,
     },
     backgroundImage: {
         height:'100%',
